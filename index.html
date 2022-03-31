@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/drawModal.css">
+    <link rel="stylesheet" href="css/scoreboard.css">
+</head>
+<body onload="init()">
+    <main onclick="cancelPick(event)">
+        <div class="cover" onclick="closeGameOverModal();closeDrawModal()"></div>
+        <div class="modal game-over-modal">
+            <span class="close" onclick="closeGameOverModal()">✖</span>
+            <h1>GAME OVER</h1>
+            <div class="subtitle-container">
+                <h5></h5>
+            </div>
+            <img src="/assets/winner.png" alt="">
+        </div>
+        <div class="modal draw-modal">
+            <span class="close" onclick="closeDrawModal()">✖</span>
+            <h3><span class="color"></span> has offered a draw</h3>
+            <div class="response-btn-container">
+                <button onclick="acceptDraw()">Accept</button>
+                <button onclick="declineDraw()">Decline</button>
+            </div>
+        </div>
+        <div class="scoreboard-container">
+            <img class="title" src="assets/checkers-title.png" alt="">
+            <div class="content">
+                <div class="score white">
+                    <h3>White</h3>
+                    <span></span>
+                </div>
+                <img class="vs" src="assets/versus.png" alt="">
+                <div class="score black">
+                    <h3>Black</h3>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+        <h3 class="turn"></h3>
+        </div>
+        <table class="board"></table>
+        <div class="button-container">
+            <button onclick="resign()">Resign</button>
+            <button onclick="openDrawModal()">Draw</button>
+            <img onclick="restartGame()" class="refresh-btn" src="/assets/restart.png" alt="">
+
+        </div>
+    </main>
+    <script src="js/index.js"></script>
+    <script src="js/sounds.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

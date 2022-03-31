@@ -1,0 +1,53 @@
+/*  */
+/* THIS IS A PC FIRST VERSION */
+/*  */
+
+.board {
+  /* height: 70vh;
+    width: 70vh; */
+  /* background-color: white; */
+  padding: 0;
+  margin: 0;
+  box-shadow: -10px 10px 10px 5px rgb(7, 7, 7);
+}
+.cell {
+  /* height: 5%; */
+  height: 90px;
+  width: 90px;
+  overflow: hidden;
+  text-align: center;
+}
+.board .cell.mark {
+  /* filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg)
+      saturate(600%) contrast(0.8); */
+  background-color: rgb(173, 4, 4);
+  background-image: unset;
+  cursor: pointer;
+}
+.cell img {
+  display: inline;
+  height: 80%;
+  cursor: pointer;
+}
+.cell img.selected {
+  animation: rotate 3s linear infinite;
+}
+.cell.white {
+  background-color: rgb(0, 0, 0);
+  background-image: url(http://www.zingerbugimages.com/backgrounds/purple_abstract_stone_pattern_tileable.jpg);
+  background-position: top left;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+.cell.black {
+  background-color: rgb(0, 0, 0);
+  background-image: url(http://www.zingerbugimages.com/backgrounds/sand_stone.jpg);
+  background-position: top left;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
