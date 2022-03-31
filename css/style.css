@@ -31,11 +31,6 @@ main {
   position: relative;
   margin-bottom: 5px;
 }
-@media (min-width: 700px) {
-  .button-container {
-    margin-bottom: 6%;
-  }
-}
 
 .button-container button {
   display: flex;
