@@ -268,6 +268,7 @@ const pieceClicked = (piece) => {
     if (!gBoard[row][col].isOccupied || (gBoard[row][col].isOccupied && isWhitesTurn != gBoard[row][col].isWhitePiece)) return//checking to see i cant pick an empty cell
     const isWhite = gBoard[row][col].isWhitePiece
     const rank = gBoard[row][col].rank
+    gPickedPos = { row, col }
     checkAndMarkPossibleMoves(row, col, isWhite, rank)
 
     //cheking possible moves..
@@ -277,10 +278,12 @@ const pieceClicked = (piece) => {
             if (cell.isMarked) markedCellExists = true
         })
     })
-    if (!markedCellExists) return
+    if (!markedCellExists) {
+        gPickedPos = null
+        return
+    }
 
     gBoard[row][col].isSelected = true
-    gPickedPos = { row, col }
     renderBoard(gBoard)
 }
 const cancelPick = (ev) => {
@@ -384,7 +387,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             //down right
             for (let i = 1; i < (8 - row) && i < (8 - col); i++) {
                 if (row + i + 1 < 8 && col + i + 1 < 8 && (gBoard[row + i][col + i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col + i + 1].isOccupied && (!gBoard[row + i][col + i].isMarked && gBoard[row + i][col + i].isOccupied)) {
-                    if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
+                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
                     gBoard[row + i + 1][col + i + 1].isMarked = true
                     gBoard[row + i][col + i].isMarked = true
                     gPossibleMoves.push({ row: row + i + 1, col: col + i + 1 })
@@ -393,7 +396,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             //down left
             for (let i = 1; i < (8 - row) && i < col + 1; i++) {
                 if (row + i + 1 < 8 && col - i - 1 >= 0 && (gBoard[row + i][col - i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col - i - 1].isOccupied && (!gBoard[row + i][col - i].isMarked && gBoard[row + i][col - i].isOccupied)) {
-                    if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
+                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
                     gBoard[row + i + 1][col - i - 1].isMarked = true
                     gBoard[row + i][col - i].isMarked = true
                     gPossibleMoves.push({ row: row + i + 1, col: col - i - 1 })
@@ -402,7 +405,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             //up left
             for (let i = 1; i < row + 1 && i < col + 1; i++) {
                 if (row - i - 1 >= 0 && col - i - 1 >= 0 && (gBoard[row - i][col - i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col - i - 1].isOccupied && (!gBoard[row - i][col - i].isMarked && gBoard[row - i][col - i].isOccupied)) {
-                    if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
+                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
                     gBoard[row - i - 1][col - i - 1].isMarked = true
                     gBoard[row - i][col - i].isMarked = true
                     gPossibleMoves.push({ row: row - i - 1, col: col - i - 1 })
@@ -411,7 +414,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             //up right
             for (let i = 1; i < row + 1 && i < (8 - col); i++) {
                 if (row - i - 1 >= 0 && col + i + 1 < 8 && (gBoard[row - i][col + i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col + i + 1].isOccupied && (!gBoard[row - i][col + i].isMarked && gBoard[row - i][col + i].isOccupied)) {
-                    if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
+                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
                     gBoard[row - i - 1][col + i + 1].isMarked = true
                     gBoard[row - i][col + i].isMarked = true
                     gPossibleMoves.push({ row: row - i - 1, col: col + i + 1 })
@@ -575,15 +578,50 @@ const unMarkAll = () => {
     renderBoard(gBoard)
 }
 const checkEatenPiecesAround = (row, col) => {
-    return (
-        row + 1 < 8 && col + 1 < 8 && gBoard[row + 1][col + 1].isOccupied && gBoard[row + 1][col + 1].isMarked
-        ||
-        row + 1 < 8 && col - 1 >= 0 && gBoard[row + 1][col - 1].isOccupied && gBoard[row + 1][col - 1].isMarked
-        ||
-        row - 1 >= 0 && col - 1 >= 0 && gBoard[row - 1][col - 1].isOccupied && gBoard[row - 1][col - 1].isMarked
-        ||
-        row - 1 >= 0 && col + 1 < 8 && gBoard[row - 1][col + 1].isOccupied && gBoard[row - 1][col + 1].isMarked
-    )
+    //gPickedPos.row- row ===> if smaller than 0 we check if if right down(one square) is not occupied, then if theres any occupied+marked cells 
+    const rowDiff = gPickedPos.row - row
+    const colDiff = gPickedPos.col - col
+    if (rowDiff < 0) {
+        if (colDiff < 0) {
+
+            for (let i = 1; i < (8 - row) && i < (8 - col); i++) {
+                if (i > 1 && !gBoard[gPickedPos.row + i][gPickedPos.col + i].isOccupied) return false
+                if (gBoard[gPickedPos.row + i][gPickedPos.col + i].isOccupied && gBoard[gPickedPos.row + i][gPickedPos.col + i].isMarked) return true
+            }
+        } else {
+
+            for (let i = 1; i < (8 - row) && i < col + 1; i++) {
+                if (gBoard[gPickedPos.row + i][gPickedPos.col - i].isOccupied && gBoard[gPickedPos.row + i][gPickedPos.col - i]) return true
+            }
+
+        }
+    } else {
+        if (colDiff < 0) {
+            for (let i = 1; i < row + 1 && i < col + 1; i++) {
+                if (i > 1 && !gBoard[gPickedPos.row - i][gPickedPos.col - i].isOccupied) return false
+                if (gBoard[gPickedPos.row - i][gPickedPos.col - i].isOccupied && gBoard[gPickedPos.row - i][gPickedPos.col - i].isMarked) return true
+            }
+
+        } else {
+            for (let i = 1; i < row + 1 && i < (8 - col); i++) {
+                if (i > 1 && !gBoard[gPickedPos.row - i][gPickedPos.col + i].isOccupied) return false
+                if (gBoard[gPickedPos.row - i][gPickedPos.col + i].isOccupied && gBoard[gPickedPos.row - i][gPickedPos.col + i].isMarked) return true
+            }
+        }
+    }
+    // if (gBoard[row][col].rank === "king") {
+    //down right
+    // } else {
+    //     return (
+    //         row + 1 < 8 && col + 1 < 8 && gBoard[row + 1][col + 1].isOccupied && gBoard[row + 1][col + 1].isMarked
+    //         ||
+    //         row + 1 < 8 && col - 1 >= 0 && gBoard[row + 1][col - 1].isOccupied && gBoard[row + 1][col - 1].isMarked
+    //         ||
+    //         row - 1 >= 0 && col - 1 >= 0 && gBoard[row - 1][col - 1].isOccupied && gBoard[row - 1][col - 1].isMarked
+    //         ||
+    //         row - 1 >= 0 && col + 1 < 8 && gBoard[row - 1][col + 1].isOccupied && gBoard[row - 1][col + 1].isMarked
+    //     )
+    // }
 }
 const crownSoldier = (cell) => {
     cell.rank = "king"
