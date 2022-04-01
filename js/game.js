@@ -344,29 +344,29 @@ const isLegalMove = (row, col) => {
             if (colDiff < 0) {
                 //down right
                 for (let i = 1; i < Math.abs(rowDiff); i++) {
-                    if (row + i > 7 || col + i > 8) break
-                    if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isWhitePiece === isWhitesTurn) return false
+                    if (gPickedPos.row + i > 7 || gPickedPos.col + i > 8) break
+                    if (gBoard[gPickedPos.row + i][gPickedPos.col + i].isOccupied && gBoard[gPickedPos.row + i][gPickedPos.col + i].isWhitePiece === isWhitesTurn) return false
 
                 }
             } else {
                 //down left
                 for (let i = 1; i < Math.abs(rowDiff); i++) {
-                    if (row + i > 7 || col - i < 0) break
-                    if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isWhitePiece === isWhitesTurn) return false
+                    if (gPickedPos.row + i > 7 || gPickedPos.col - i < 0) break
+                    if (gBoard[gPickedPos.row + i][gPickedPos.col - i].isOccupied && gBoard[gPickedPos.row + i][gPickedPos.col - i].isWhitePiece === isWhitesTurn) return false
                 }
             }
         } else {
             if (colDiff < 0) {
                 //up right
                 for (let i = 1; i < Math.abs(rowDiff); i++) {
-                    if (row - i < 0 || col + i > 7) break
-                    if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isWhitePiece === isWhitesTurn) return false
+                    if (gPickedPos.row - i < 0 || gPickedPos.col + i > 7) break
+                    if (gBoard[gPickedPos.row - i][gPickedPos.col + i].isOccupied && gBoard[gPickedPos.row - i][gPickedPos.col + i].isWhitePiece === isWhitesTurn) return false
                 }
             } else {
                 //up left
                 for (let i = 1; i < Math.abs(rowDiff); i++) {
-                    if (row - i < 0 || col - i < 0) break
-                    if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isWhitePiece === isWhitesTurn) return false
+                    if (gPickedPos.row - i < 0 || gPickedPos.col - i < 0) break
+                    if (gBoard[gPickedPos.row - i][gPickedPos.col - i].isOccupied && gBoard[gPickedPos.row - i][gPickedPos.col - i].isWhitePiece === isWhitesTurn) return false
                 }
             }
         }
