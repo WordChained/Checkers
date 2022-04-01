@@ -94,6 +94,8 @@ const updateScore = () => {
     const blackScoreboard = document.querySelector(".score.black span")
     whiteScoreboard.innerText = whitePiecesCount
     blackScoreboard.innerText = blackPiecesCount
+}
+const isGameOver = () => {
     if (whitePiecesCount === 0) {
         gWinner = "Black"
         victorySound.play()
@@ -148,6 +150,7 @@ const gameOver = () => {
     renderBoard(gBoard)
     markTurn()
     gTurnCount = 1
+    updateScore()
 }
 const restartGame = () => {
     gBoard = buildBoard()

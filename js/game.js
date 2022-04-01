@@ -78,14 +78,7 @@ const endTurn = () => {
     isWhitesTurn = !isWhitesTurn
     isRecursiveEating = false
     isCurrentlyEating = false
-    updateScore()
-    if (whitePiecesCount === 0) {
-        gWinner = "Black"
-        gameOver()
-    } else if (blackPiecesCount === 0) {
-        gWinner = "white"
-        gameOver()
-    }
+    isGameOver()
     markTurn()
     isLegalMoveLeft()
     countPiecesAndRank()
@@ -178,6 +171,7 @@ const eat = (destinationRow, destinationCol, row, col) => {
                 promotionSound.play()
             }, 200)
         }
+        unMarkAll()
         renderBoard(gBoard)
     }
 }
@@ -244,6 +238,7 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
         console.log("end turn!");
         cancelPick()
         endTurn()
+        unMarkAll()
         gBoard[destinationRow][destinationCol].isSelected = false
         renderBoard(gBoard)
     }
