@@ -70,6 +70,7 @@ const isEnemyPieceInRoute = (rowDiff, colDiff) => {
     return false
 }
 const endTurn = () => {
+    gTurnCount++
     cancelPick()
     gPossibleMoves = []
     //to pass the turn...

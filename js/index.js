@@ -3,7 +3,7 @@ let gBoard;
 let gWinner = "white";
 let isDraw = false;
 let isWhitesTurn = true;
-let gTurnCount = 0;
+let gTurnCount = 1;
 const init = () => {
     loadSounds()
     gBoard = buildBoard()
@@ -19,7 +19,7 @@ const buildBoard = () => {
         let cells = []
         for (let j = 0; j < 8; j++) {
             if (i < 3 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: true, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
-            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'king', isOccupied: true, isMarked: false, isSelected: false })
+            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
             else cells.push({ location: { row: i, col: j }, isOccupied: false })
         }
         board.push(cells)
@@ -70,12 +70,13 @@ const closeGameOverModal = () => {
     elCover.style.display = "none"
 }
 const openDrawModal = () => {
+    if (gTurnCount === 1) return
     const elCover = document.querySelector(".cover")
     const elModal = document.querySelector(".draw-modal")
     const elSubtitle = document.querySelector(".draw-modal h3 span")
     elSubtitle.innerText = isWhitesTurn ? "WHITE" : "BLACK"
 
-    elModal.style.right = "50%"
+    elModal.style.left = "50%"
     elCover.style.display = "block"
 }
 const closeDrawModal = () => {
@@ -85,7 +86,7 @@ const closeDrawModal = () => {
     setTimeout(() => {
         elSubtitle.innerText = ''
     }, 1000)
-    elModal.style.right = "-150vw"
+    elModal.style.left = "-150vw"
     elCover.style.display = "none"
 }
 const updateScore = () => {
@@ -108,6 +109,7 @@ const updateScore = () => {
     }
 }
 const resign = () => {
+    if (gTurnCount === 1) return
     gWinner = isWhitesTurn ? "Black" : "White"
     victorySound.play()
     gameOver()
@@ -145,6 +147,7 @@ const gameOver = () => {
     gPossibleMoves = []
     renderBoard(gBoard)
     markTurn()
+    gTurnCount = 1
 }
 const restartGame = () => {
     gBoard = buildBoard()
@@ -159,6 +162,7 @@ const restartGame = () => {
     renderBoard(gBoard)
     markTurn()
     updateScore()
+    gTurnCount = 1
 }
 
 
