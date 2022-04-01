@@ -19,7 +19,7 @@ const buildBoard = () => {
         let cells = []
         for (let j = 0; j < 8; j++) {
             if (i < 3 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: true, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
-            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
+            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'king', isOccupied: true, isMarked: false, isSelected: false })
             else cells.push({ location: { row: i, col: j }, isOccupied: false })
         }
         board.push(cells)
