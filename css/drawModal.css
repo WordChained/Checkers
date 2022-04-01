@@ -3,8 +3,9 @@
   flex-direction: column;
   justify-content: space-around;
   right: -150vw;
+  top: 50%;
   transition: all 0.7s;
-  transform: translate(50%);
+  transform: translate(50%, -50%);
 }
 .draw-modal h3 {
   color: rgb(236, 236, 236);
