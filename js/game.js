@@ -80,6 +80,7 @@ const endTurn = () => {
     isCurrentlyEating = false
     isGameOver()
     markTurn()
+    updateScore()
     isLegalMoveLeft()
     countPiecesAndRank()
 }
@@ -172,6 +173,7 @@ const eat = (destinationRow, destinationCol, row, col) => {
             }, 200)
         }
         unMarkAll()
+        updateScore()
         renderBoard(gBoard)
     }
 }
