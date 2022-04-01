@@ -141,6 +141,7 @@ const gameOver = () => {
     blackPiecesCount = 12
     isRecursiveEating = false
     isWhitesTurn = true
+    isDraw = false
     gPossibleMoves = []
     renderBoard(gBoard)
     markTurn()
@@ -150,6 +151,7 @@ const restartGame = () => {
     gPickedPos = null
     whitePiecesCount = 12
     blackPiecesCount = 12
+    isDraw = false
     isRecursiveEating = false
     isCurrentlyEating = false
     isWhitesTurn = true

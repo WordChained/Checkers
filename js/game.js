@@ -87,6 +87,7 @@ const endTurn = () => {
     }
     markTurn()
     isLegalMoveLeft()
+    countPiecesAndRank()
 }
 const move = (destinationRow, destinationCol, row, col) => {
     if (isCurrentlyEating) return
@@ -308,16 +309,69 @@ const isLegalMove = (row, col) => {
     if (gBoard[row][col].isOccupied || !gBoard[row][col].isMarked) return false
     const rowDiff = gPickedPos.row - row
     const colDiff = gPickedPos.col - col
-    if (gBoard[gPickedPos.row][gPickedPos.col].rank === "soldier") {
+    if (gBoard[gPickedPos.row][gPickedPos.col].rank === "soldier") {//soldier
         if (Math.abs(rowDiff) === 1 && Math.abs(colDiff) === 1) {
             return true
         } else if (Math.abs(rowDiff) === 2 && Math.abs(colDiff) === 2) {
+            if (rowDiff < 0) {//turn the enemy piece to an empty cell
+                if (colDiff < 0) {
+                    //down right
+                    if (gBoard[gPickedPos.row + 1][gPickedPos.col + 1].isOccupied
+                        &&
+                        gBoard[gPickedPos.row + 1][gPickedPos.col + 1].isWhitePiece === isWhitesTurn) return false
+                } else {
+                    //down left
+                    if (gBoard[gPickedPos.row + 1][gPickedPos.col - 1].isOccupied
+                        &&
+                        gBoard[gPickedPos.row + 1][gPickedPos.col - 1].isWhitePiece === isWhitesTurn) return false
+                }
+            } else {
+                if (colDiff < 0) {
+                    //up right
+                    if (gBoard[gPickedPos.row - 1][gPickedPos.col + 1].isOccupied
+                        &&
+                        gBoard[gPickedPos.row - 1][gPickedPos.col + 1].isWhitePiece === isWhitesTurn) return false
+
+                } else {
+                    //up left
+                    if (gBoard[gPickedPos.row - 1][gPickedPos.col - 1].isOccupied
+                        &&
+                        gBoard[gPickedPos.row - 1][gPickedPos.col - 1].isWhitePiece === isWhitesTurn) return false
+                }
+            }
             //eating
             return true
         } else return false
-    } else {
+    } else {//king
         //implement king legal moves logic
-        if (Math.abs(rowDiff) === Math.abs(colDiff)) return true
+        if (Math.abs(rowDiff) != Math.abs(colDiff)) return false
+        if (rowDiff < 0) {//turn the enemy piece to an empty cell
+            if (colDiff < 0) {
+                //down right
+                for (let i = 1; i < Math.abs(rowDiff); i++) {
+                    if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isWhitePiece === isWhitesTurn) return false
+
+                }
+            } else {
+                //down left
+                for (let i = 1; i < Math.abs(rowDiff); i++) {
+                    if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isWhitePiece === isWhitesTurn) return false
+                }
+            }
+        } else {
+            if (colDiff < 0) {
+                //up right
+                for (let i = 1; i < Math.abs(rowDiff); i++) {
+                    if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isWhitePiece === isWhitesTurn) return false
+                }
+            } else {
+                //up left
+                for (let i = 1; i < Math.abs(rowDiff); i++) {
+                    if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isWhitePiece === isWhitesTurn) return false
+                }
+            }
+        }
+        return true
     }
 }
 const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) => {
@@ -697,10 +751,10 @@ const isLegalMoveLeft = () => {
     }
 }
 const countPiecesAndRank = () => {
-    const whiteSoldierCount = 0
-    const blackSoldierCount = 0
-    const whiteKingCount = 0
-    const blackKingCount = 0
+    let whiteSoldierCount = 0
+    let blackSoldierCount = 0
+    let whiteKingCount = 0
+    let blackKingCount = 0
     gBoard.forEach(row => {
         row.forEach(cell => {
             if (cell.isOccupied && cell.isWhitePiece && cell.rank === "soldier") whiteSoldierCount++
