@@ -18,9 +18,9 @@ const buildBoard = () => {
     for (let i = 0; i < 8; i++) {
         let cells = []
         for (let j = 0; j < 8; j++) {
-            if (i < 3 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: true, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
-            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false })
-            else cells.push({ location: { row: i, col: j }, isOccupied: false })
+            if (i < 3 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: true, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false, isEatingPath: false })
+            else if (i > 4 && (i + j) % 2 === 0) cells.push({ location: { row: i, col: j }, isWhitePiece: false, rank: 'soldier', isOccupied: true, isMarked: false, isSelected: false, isEatingPath: false })
+            else cells.push({ location: { row: i, col: j }, isOccupied: false, isEatingPath: false })
         }
         board.push(cells)
     }
@@ -147,7 +147,7 @@ const gameOver = () => {
     gPickedPos = null
     whitePiecesCount = 12
     blackPiecesCount = 12
-    isRecursiveEating = false
+    gIsRecursiveEating = false
     isWhitesTurn = true
     isDraw = false
     gPossibleMoves = []
@@ -162,7 +162,7 @@ const restartGame = () => {
     whitePiecesCount = 12
     blackPiecesCount = 12
     isDraw = false
-    isRecursiveEating = false
+    gIsRecursiveEating = false
     isCurrentlyEating = false
     isWhitesTurn = true
     gPossibleMoves = []

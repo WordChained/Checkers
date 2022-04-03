@@ -4,7 +4,7 @@ let gPickedPos = null;
 let whitePiecesCount = 12
 let blackPiecesCount = 12
 let gPossibleMoves = []
-let isRecursiveEating = false
+let gIsRecursiveEating = false
 let isCurrentlyEating = false
 
 //rules to end game:
@@ -78,7 +78,7 @@ const endTurn = () => {
     gPossibleMoves = []
     gPickedPos = null
     isWhitesTurn = !isWhitesTurn
-    isRecursiveEating = false
+    gIsRecursiveEating = false
     isCurrentlyEating = false
     markTurn()
     isLegalMoveLeft()
@@ -118,21 +118,21 @@ const eat = (destinationRow, destinationCol, row, col) => {
         if (colDiff < 0) {
             //down right
             gBoard[row + 1][col + 1].isWhitePiece ? whitePiecesCount-- : blackPiecesCount--;
-            gBoard[row + 1][col + 1] = { location: { row: row + 1, col: col + 1 }, isOccupied: false }
+            gBoard[row + 1][col + 1] = { location: { row: row + 1, col: col + 1 }, isOccupied: false, isEatingPath: false }
         } else {
             //down left
             gBoard[row + 1][col - 1].isWhitePiece ? whitePiecesCount-- : blackPiecesCount--;
-            gBoard[row + 1][col - 1] = { location: { row: row + 1, col: col - 1 }, isOccupied: false }
+            gBoard[row + 1][col - 1] = { location: { row: row + 1, col: col - 1 }, isOccupied: false, isEatingPath: false }
         }
     } else {
         if (colDiff < 0) {
             //up right
             gBoard[row - 1][col + 1].isWhitePiece ? whitePiecesCount-- : blackPiecesCount--;
-            gBoard[row - 1][col + 1] = { location: { row: row - 1, col: col + 1 }, isOccupied: false }
+            gBoard[row - 1][col + 1] = { location: { row: row - 1, col: col + 1 }, isOccupied: false, isEatingPath: false }
         } else {
             //up left
             gBoard[row - 1][col - 1].isWhitePiece ? whitePiecesCount-- : blackPiecesCount--;
-            gBoard[row - 1][col - 1] = { location: { row: row - 1, col: col - 1 }, isOccupied: false }
+            gBoard[row - 1][col - 1] = { location: { row: row - 1, col: col - 1 }, isOccupied: false, isEatingPath: false }
         }
     }
 
@@ -151,9 +151,10 @@ const eat = (destinationRow, destinationCol, row, col) => {
         (destinationRow - 1 >= 0 && destinationCol - 1 >= 0 && gBoard[destinationRow - 1][destinationCol - 1].isMarked && gBoard[destinationRow - 1][destinationCol - 1].isOccupied)
     ) {
         gBoard[destinationRow][destinationCol].isMarked = false
+        // gBoard[destinationRow][destinationCol].isEatingPath = false
         // console.log("keep eating")
         gPickedPos = { row: destinationRow, col: destinationCol }
-        isRecursiveEating = true
+        gIsRecursiveEating = true
         unMarkAll()
         checkAndMarkPossibleMoves(destinationRow, destinationCol, gBoard[destinationRow][destinationCol].isWhitePiece, "soldier", true)
         isCurrentlyEating = true
@@ -187,14 +188,14 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
             //down right
             for (let i = 1; i < Math.abs(rowDiff); i++) {
                 if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isMarked) isWhitesTurn ? blackPiecesCount-- : whitePiecesCount--
-                gBoard[row + i][col + i] = { location: { row: row + i, col: col + i }, isOccupied: false }
+                gBoard[row + i][col + i] = { location: { row: row + i, col: col + i }, isOccupied: false, isEatingPath: false }
 
             }
         } else {
             //down left
             for (let i = 1; i < Math.abs(rowDiff); i++) {
                 if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isMarked) isWhitesTurn ? blackPiecesCount-- : whitePiecesCount--
-                gBoard[row + i][col - i] = { location: { row: row + i, col: col - i }, isOccupied: false }
+                gBoard[row + i][col - i] = { location: { row: row + i, col: col - i }, isOccupied: false, isEatingPath: false }
             }
         }
     } else {
@@ -202,13 +203,13 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
             //up right
             for (let i = 1; i < Math.abs(rowDiff); i++) {
                 if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isMarked) isWhitesTurn ? blackPiecesCount-- : whitePiecesCount--
-                gBoard[row - i][col + i] = { location: { row: row - i, col: col + i }, isOccupied: false }
+                gBoard[row - i][col + i] = { location: { row: row - i, col: col + i }, isOccupied: false, isEatingPath: false }
             }
         } else {
             //up left
             for (let i = 1; i < Math.abs(rowDiff); i++) {
                 if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isMarked) isWhitesTurn ? blackPiecesCount-- : whitePiecesCount--
-                gBoard[row - i][col - i] = { location: { row: row - i, col: col - i }, isOccupied: false }
+                gBoard[row - i][col - i] = { location: { row: row - i, col: col - i }, isOccupied: false, isEatingPath: false }
             }
         }
     }
@@ -217,7 +218,8 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
     gBoard[row][col] = { location: { row, col }, isOccupied: false }
 
     //check is there are other possible cells to eat
-    isRecursiveEating = true
+    gIsRecursiveEating = true
+    isCurrentlyEating = true
     unMarkAll()
     checkAndMarkPossibleMoves(destinationRow, destinationCol, gBoard[destinationRow][destinationCol].isWhitePiece, "king", true)
     gPickedPos = { row: destinationRow, col: destinationCol }
@@ -231,12 +233,13 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
 
     if (isMoreToEat) {
         console.log("keep eating")
+        isCurrentlyEating = true
         updateScore()
         renderBoard(gBoard)
-        isCurrentlyEating = true
     }
     else {
-        isRecursiveEating = false
+        isCurrentlyEating = false
+        gIsRecursiveEating = false
         console.log("end turn!");
         cancelPick()
         endTurn()
@@ -297,12 +300,13 @@ const cancelPick = (ev) => {
             row.forEach(cell => {
                 cell.isSelected = false
                 cell.isMarked = false
+                cell.isEatingPath = false
             })
         })
         // selectedCells.classList.remove("selected")
         gPickedPos = null
     }
-    isRecursiveEating = false
+    gIsRecursiveEating = false
     renderBoard(gBoard)
 }
 const isLegalMove = (row, col) => {
@@ -382,46 +386,127 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
     gPossibleMoves = []
     let isCellEmpty = !gBoard[row][col].isOccupied
     let isEnemyPiece = gBoard[row][col].isOccupied && (gBoard[row][col].isWhitePiece != isWhite)
+    let temp = []
+    let shouldMark = false
     if (rank === "king") {
-        //fill out king moves
-
-        if (isRecursiveEating) {
+        if (gIsRecursiveEating) {
+            console.log("isCurrentlyEating:", isCurrentlyEating);
             //down right
             for (let i = 1; i < (8 - row) && i < (8 - col); i++) {
-                if (row + i + 1 < 8 && col + i + 1 < 8 && (gBoard[row + i][col + i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col + i + 1].isOccupied && (!gBoard[row + i][col + i].isMarked && gBoard[row + i][col + i].isOccupied)) {
-                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
-                    gBoard[row + i + 1][col + i + 1].isMarked = true
+                if (!(row + i + 1 < 8 && col + i + 1 < 8 && !gBoard[row + i][col + i].isMarked)) break
+                // if (isCurrentlyEating && !isCorrectDirection(row, col, row + i, col + i)) break
+                // if unoccupied add to tempArray
+                if (!gBoard[row + i][col + i].isOccupied) temp.push({ row: row + i, col: col + i })
+                else if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isWhitePiece === isWhitesTurn) break
+                else if (gBoard[row + i][col + i].isOccupied && gBoard[row + i + 1][col + i + 1].isOccupied) break
+                if (
+                    gBoard[row + i][col + i].isOccupied
+                    &&
+                    gBoard[row + i][col + i].isWhitePiece != isWhitesTurn
+                    &&
+                    !gBoard[row + i + 1][col + i + 1].isOccupied
+                    &&
+                    !gBoard[row + i + 1][col + i + 1].isMarked) {
+
+                    shouldMark = true
                     gBoard[row + i][col + i].isMarked = true
-                    gPossibleMoves.push({ row: row + i + 1, col: col + i + 1 })
-                } else break
+                    if (!isCurrentlyEating) gBoard[row][col].isMarked = true
+                    temp.push({ row: row + i + 1, col: col + i + 1 })
+                }
             }
+            temp = [...new Set(temp)]
+            if (shouldMark) temp.forEach(cell => {
+                gBoard[cell.row][cell.col].isMarked = true
+                gPossibleMoves.push(cell)
+            })
+            temp = []
+            shouldMark = false
             //down left
             for (let i = 1; i < (8 - row) && i < col + 1; i++) {
-                if (row + i + 1 < 8 && col - i - 1 >= 0 && (gBoard[row + i][col - i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col - i - 1].isOccupied && (!gBoard[row + i][col - i].isMarked && gBoard[row + i][col - i].isOccupied)) {
-                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
-                    gBoard[row + i + 1][col - i - 1].isMarked = true
-                    gBoard[row + i][col - i].isMarked = true
-                    gPossibleMoves.push({ row: row + i + 1, col: col - i - 1 })
-                } else break
+                if (!(row + i + 1 < 8 && col - i - 1 >= 0 && !gBoard[row + i][col - i].isMarked)) break
+                // if (isCurrentlyEating && !isCorrectDirection(row, col, row + i, col - i)) break
+                // if unoccupied add to tempArray
+                if (!gBoard[row + i][col - i].isOccupied) temp.push({ row: row + i, col: col - i })
+                else if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isWhitePiece === isWhitesTurn) break
+                else if (gBoard[row + i][col - i].isOccupied && gBoard[row + i + 1][col - i - 1].isOccupied) break
+                if (
+                    gBoard[row + i][col - i].isOccupied
+                    &&
+                    gBoard[row + i][col - i].isWhitePiece != isWhitesTurn
+                    &&
+                    !gBoard[row - i - 1][col - i - 1].isOccupied
+                    &&
+                    !gBoard[row - i - 1][col - i - 1].isMarked) {
+                    shouldMark = true
+                    Board[row + i][col - i].isMarked = true
+                    temp.push({ row: row + i + 1, col: col - i - 1 })
+                }
             }
+            temp = [...new Set(temp)]
+            if (shouldMark) temp.forEach(cell => {
+                gBoard[cell.row][cell.col].isMarked = true
+                gPossibleMoves.push(cell)
+            })
+            temp = []
+            shouldMark = false
             //up left
             for (let i = 1; i < row + 1 && i < col + 1; i++) {
-                if (row - i - 1 >= 0 && col - i - 1 >= 0 && (gBoard[row - i][col - i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col - i - 1].isOccupied && (!gBoard[row - i][col - i].isMarked && gBoard[row - i][col - i].isOccupied)) {
-                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
-                    gBoard[row - i - 1][col - i - 1].isMarked = true
+                if (!(row - i - 1 >= 0 && col - i - 1 >= 0 && !gBoard[row - i][col - i].isMarked)) break
+                // if unoccupied add to tempArray
+                // if (isCurrentlyEating && !isCorrectDirection(row, col, row - i, col - i)) break
+                if (!gBoard[row - i][col - i].isOccupied) temp.push({ row: row - i, col: col - i })
+                else if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isWhitePiece === isWhitesTurn) break
+                else if (gBoard[row - i][col - i].isOccupied && gBoard[row - i - 1][col - i - 1].isOccupied) break
+                if (
+                    gBoard[row - i][col - i].isOccupied
+                    &&
+                    gBoard[row - i][col - i].isWhitePiece != isWhitesTurn
+                    &&
+                    !gBoard[row - i - 1][col - i - 1].isOccupied
+                    &&
+                    !gBoard[row - i - 1][col - i - 1].isMarked) {
+                    shouldMark = true
                     gBoard[row - i][col - i].isMarked = true
-                    gPossibleMoves.push({ row: row - i - 1, col: col - i - 1 })
-                } else break
+                    temp.push({ row: row - i - 1, col: col - i - 1 })
+
+                }
             }
+            temp = [...new Set(temp)]
+            if (shouldMark) temp.forEach(cell => {
+                gBoard[cell.row][cell.col].isMarked = true
+                gPossibleMoves.push(cell)
+            })
+            temp = []
+            shouldMark = false
             //up right
             for (let i = 1; i < row + 1 && i < (8 - col); i++) {
-                if (row - i - 1 >= 0 && col + i + 1 < 8 && (gBoard[row - i][col + i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col + i + 1].isOccupied && (!gBoard[row - i][col + i].isMarked && gBoard[row - i][col + i].isOccupied)) {
-                    // if (!isUnmarked && !checkEatenPiecesAround(row, col)) break
-                    gBoard[row - i - 1][col + i + 1].isMarked = true
+                if (!(row - i - 1 >= 0 && col + i + 1 < 8 && !gBoard[row - i][col + i].isMarked)) break
+                // if unoccupied add to tempArray
+                // if (isCurrentlyEating && !isCorrectDirection(row, col, row - i, col + i)) break
+                if (!gBoard[row - i][col + i].isOccupied) temp.push({ row: row - i, col: col + i })
+                else if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isWhitePiece === isWhitesTurn) break
+                else if (gBoard[row - i][col + i].isOccupied && gBoard[row - i - 1][col + i + 1].isOccupied) break
+                if (
+                    gBoard[row - i][col + i].isOccupied
+                    &&
+                    gBoard[row - i][col + i].isWhitePiece != isWhitesTurn
+                    &&
+                    !gBoard[row - i - 1][col + i + 1].isOccupied
+                    &&
+                    !gBoard[row - i - 1][col + i + 1].isMarked
+                ) {
+                    shouldMark = true
                     gBoard[row - i][col + i].isMarked = true
-                    gPossibleMoves.push({ row: row - i - 1, col: col + i + 1 })
-                } else break
+                    temp.push({ row: row - i - 1, col: col + i + 1 })
+                }
             }
+            temp = [...new Set(temp)]
+            if (shouldMark) temp.forEach(cell => {
+                gBoard[cell.row][cell.col].isMarked = true
+                gPossibleMoves.push(cell)
+            })
+            temp = []
+            shouldMark = false
         }
         else {
             //down right
@@ -433,9 +518,10 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 }
                 else if (row + i + 1 < 8 && col + i + 1 < 8 && (gBoard[row + i][col + i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col + i + 1].isOccupied) {
                     gBoard[row + i + 1][col + i + 1].isMarked = true
+                    gBoard[row + i + 1][col + i + 1].isEatingPath = true
                     gBoard[row + i][col + i].isMarked = true
                     gPossibleMoves.push({ row: row + i + 1, col: col + i + 1 })
-                    isRecursiveEating = true;
+                    gIsRecursiveEating = true;
                 } else break;
             }
             //down left
@@ -447,9 +533,10 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 }
                 else if (row + i + 1 < 8 && col - i - 1 >= 0 && (gBoard[row + i][col - i].isWhitePiece != isWhite) && !gBoard[row + i + 1][col - i - 1].isOccupied) {
                     gBoard[row + i + 1][col - i - 1].isMarked = true
+                    gBoard[row + i + 1][col - i - 1].isEatingPath = true
                     gBoard[row + i][col - i].isMarked = true
                     gPossibleMoves.push({ row: row + i + 1, col: col - i - 1 })
-                    isRecursiveEating = true;
+                    gIsRecursiveEating = true;
                 } else break
             }
             //up left
@@ -461,9 +548,10 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 }
                 else if (row - i - 1 >= 0 && col - i - 1 >= 0 && (gBoard[row - i][col - i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col - i - 1].isOccupied) {
                     gBoard[row - i - 1][col - i - 1].isMarked = true
+                    gBoard[row - i - 1][col - i - 1].isEatingPath = true
                     gBoard[row - i][col - i].isMarked = true
                     gPossibleMoves.push({ row: row - i - 1, col: col - i - 1 })
-                    isRecursiveEating = true;
+                    gIsRecursiveEating = true;
                 } else break
             }
             //up right
@@ -475,15 +563,16 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 }
                 else if (row - i - 1 >= 0 && col + i + 1 < 8 && (gBoard[row - i][col + i].isWhitePiece != isWhite) && !gBoard[row - i - 1][col + i + 1].isOccupied) {
                     gBoard[row - i - 1][col + i + 1].isMarked = true
+                    gBoard[row - i - 1][col + i + 1].isEatingPath = true
                     gBoard[row - i][col + i].isMarked = true
                     gPossibleMoves.push({ row: row - i - 1, col: col + i + 1 })
-                    isRecursiveEating = true;
+                    gIsRecursiveEating = true;
                 } else break
             }
         }
     }
     else {
-        if (isRecursiveEating) {
+        if (gIsRecursiveEating) {
             if (//checking if can continue eating by checking if theres a possible targeted enemy piece around
                 isUnmarked ||
                 ((row + 1 < 8 && col + 1 < 8 && gBoard[row + 1][col + 1].isMarked && gBoard[row + 1][col + 1].isOccupied)
@@ -517,7 +606,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             }
 
         }
-        if (!isRecursiveEating && isWhite) {//white
+        if (!gIsRecursiveEating && isWhite) {//white
             if (isWhite && !isCellEmpty && !isEnemyPiece && row + 1 < 8 && col + 1 < 8 && !gBoard[row + 1][col + 1].isOccupied) {
                 gPossibleMoves.push({ row: row + 1, col: col + 1 });
                 gBoard[row + 1][col + 1].isMarked = true;
@@ -530,16 +619,16 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 gBoard[row + 1][col + 1].isMarked = true;
                 gBoard[row + 2][col + 2].isMarked = true;
                 gPossibleMoves.push({ row: row + 2, col: col + 2 });
-                isRecursiveEating = true
+                gIsRecursiveEating = true
             }
             if (!isEnemyPiece && row + 2 < 8 && col - 2 >= 0 && gBoard[row + 1][col - 1].isOccupied && (gBoard[row + 1][col - 1].isWhitePiece != isWhite) && !gBoard[row + 2][col - 2].isOccupied) {
                 gBoard[row + 1][col - 1].isMarked = true;
                 gBoard[row + 2][col - 2].isMarked = true;
                 gPossibleMoves.push({ row: row + 2, col: col - 2 });
-                isRecursiveEating = true
+                gIsRecursiveEating = true
             }
         }
-        else if (!isRecursiveEating && !isWhite) {//black
+        else if (!gIsRecursiveEating && !isWhite) {//black
             if (!isWhite && !isCellEmpty && !isEnemyPiece && row - 1 >= 0 && col + 1 < 8 && !gBoard[row - 1][col + 1].isOccupied) {
                 gPossibleMoves.push({ row: row - 1, col: col + 1 });
                 gBoard[row - 1][col + 1].isMarked = true;
@@ -552,20 +641,20 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
                 gBoard[row - 1][col + 1].isMarked = true;
                 gBoard[row - 2][col + 2].isMarked = true;
                 gPossibleMoves.push({ row: row - 2, col: col + 2 });
-                isRecursiveEating = true
+                gIsRecursiveEating = true
             }
             if (!isEnemyPiece && row - 2 >= 0 && col - 2 >= 0 && gBoard[row - 1][col - 1].isOccupied && (gBoard[row - 1][col - 1].isWhitePiece != isWhite) && !gBoard[row - 2][col - 2].isOccupied) {
                 gBoard[row - 1][col - 1].isMarked = true;
                 gBoard[row - 2][col - 2].isMarked = true;
                 gPossibleMoves.push({ row: row - 2, col: col - 2 });
-                isRecursiveEating = true
+                gIsRecursiveEating = true
             }
         }
     }
     renderBoard(gBoard)
-    let moves = [...gPossibleMoves]
-    if (isRecursiveEating) {
-        moves.forEach(move => {
+    gPossibleMoves = [...new Set(gPossibleMoves)]
+    if (gIsRecursiveEating) {
+        gPossibleMoves.forEach(move => {
             // if (gBoard[row][col].rank === "king") isUnmarked = true
             checkAndMarkPossibleMoves(move.row, move.col, isWhite, rank, isUnmarked)
         })
@@ -807,4 +896,52 @@ const countPiecesAndRank = () => {
         gameOver()
         updateScore()
     }
+}
+
+const isCorrectDirection = (currentRow, currentCol, row, col) => {
+    console.log("currentRow: ", currentRow);
+    console.log("currentCol: ", currentCol);
+
+    const rowDiff = currentRow - row
+    const colDiff = currentCol - col
+    if (rowDiff < 0) {
+        if (colDiff < 0) {
+            //down right
+            for (let i = 1; i <= Math.abs(rowDiff) && i <= Math.abs(colDiff); i++) {
+                if (row - i < 0 || col - i < 0) break
+                if (row - i === currentRow && col - i === currentCol) return true
+                // if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isMarked && gBoard[row - i][col - i].isWhitePiece != isWhitesTurn) return true
+            }
+        } else {
+            //down left
+            for (let i = 1; i <= Math.abs(rowDiff) && i <= Math.abs(colDiff); i++) {
+                if (row - i < 0 || col + i > 7) break
+                console.log("row - i:", row - i);
+                console.log("col + i:", col + i);
+                if (row - i === currentRow && col + i === currentCol) return true
+                // if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isMarked && gBoard[row - i][col + i].isWhitePiece != isWhitesTurn) return true
+            }
+        }
+    } else {
+        if (colDiff < 0) {
+            //up right
+            for (let i = 1; i <= Math.abs(rowDiff) && i <= Math.abs(colDiff); i++) {
+                if (row + i > 7 || col - i < 0) break
+                console.log("row + i === currentRow && col - i === currentCol:", row + i === currentRow && col - i === currentCol);
+                if (row + i === currentRow && col - i === currentCol) return true
+                // if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isMarked && gBoard[row + i][col - i].isWhitePiece != isWhitesTurn) return true
+            }
+        } else {
+            //up left
+            for (let i = 1; i <= Math.abs(rowDiff) && i <= Math.abs(colDiff); i++) {
+                if (row + i > 7 || col + i > 7) break
+                console.log("row + i:", row + i);
+                console.log("col + i:", col + i);
+                if (row + i === currentRow && col + i === currentCol) return true
+                // if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isMarked && gBoard[row + i][col + i].isWhitePiece != isWhitesTurn) return true
+
+            }
+        }
+    }
+    return false
 }
