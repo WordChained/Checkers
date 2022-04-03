@@ -98,12 +98,10 @@ const updateScore = () => {
 const isGameOver = () => {
     if (whitePiecesCount === 0) {
         gWinner = "Black"
-        victorySound.play()
         gameOver()
         return true
     } else if (blackPiecesCount === 0) {
         gWinner = "White"
-        victorySound.play()
         gameOver()
         return true
     }
@@ -117,7 +115,6 @@ const isGameOver = () => {
 const resign = () => {
     if (gTurnCount === 1) return
     gWinner = isWhitesTurn ? "Black" : "White"
-    victorySound.play()
     gameOver()
 }
 const declineDraw = () => {
@@ -142,6 +139,7 @@ const markTurn = () => {
 }
 const gameOver = () => {
     if (isDraw) drawSound.play()
+    else victorySound.play()
     openGameOverModal()
     gBoard = buildBoard()
     gPickedPos = null
