@@ -235,7 +235,6 @@ const kingEat = (destinationRow, destinationCol, row, col) => {
         console.log("keep eating")
         isCurrentlyEating = true
         updateScore()
-        renderBoard(gBoard)
     }
     else {
         isCurrentlyEating = false
@@ -417,7 +416,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             temp = [...new Set(temp)]
             if (shouldMark) temp.forEach(cell => {
                 gBoard[cell.row][cell.col].isMarked = true
-                gPossibleMoves.push(cell)
+                // gPossibleMoves.push(cell)
             })
             temp = []
             shouldMark = false
@@ -445,7 +444,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             temp = [...new Set(temp)]
             if (shouldMark) temp.forEach(cell => {
                 gBoard[cell.row][cell.col].isMarked = true
-                gPossibleMoves.push(cell)
+                // gPossibleMoves.push(cell)
             })
             temp = []
             shouldMark = false
@@ -474,7 +473,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             temp = [...new Set(temp)]
             if (shouldMark) temp.forEach(cell => {
                 gBoard[cell.row][cell.col].isMarked = true
-                gPossibleMoves.push(cell)
+                // gPossibleMoves.push(cell)
             })
             temp = []
             shouldMark = false
@@ -503,7 +502,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             temp = [...new Set(temp)]
             if (shouldMark) temp.forEach(cell => {
                 gBoard[cell.row][cell.col].isMarked = true
-                gPossibleMoves.push(cell)
+                // gPossibleMoves.push(cell)
             })
             temp = []
             shouldMark = false
