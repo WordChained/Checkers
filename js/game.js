@@ -667,12 +667,13 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
     }
     renderBoard(gBoard)
     gPossibleMoves = [...new Set(gPossibleMoves)]
-    // if (gIsRecursiveEating) {
-    //     gPossibleMoves.forEach(move => {
-    //         // if (gBoard[row][col].rank === "king") isUnmarked = true
-    //         checkAndMarkPossibleMoves(move.row, move.col, isWhite, rank, isUnmarked)
-    //     })
-    // }
+    if (gIsRecursiveEating) {
+        if (gBoard[row][col].rank === "king") return
+        gPossibleMoves.forEach(move => {
+            // if (gBoard[row][col].rank === "king") isUnmarked = true
+            checkAndMarkPossibleMoves(move.row, move.col, isWhite, rank, isUnmarked)
+        })
+    }
 }
 const unMarkAll = () => {
     gBoard.forEach(row => {
