@@ -100,15 +100,19 @@ const isGameOver = () => {
         gWinner = "Black"
         victorySound.play()
         gameOver()
+        return true
     } else if (blackPiecesCount === 0) {
         gWinner = "White"
         victorySound.play()
         gameOver()
+        return true
     }
     if (gOnlyKingsMoveCounter === 15) {
         isDraw = true
         gameOver()
+        return true
     }
+    return false
 }
 const resign = () => {
     if (gTurnCount === 1) return

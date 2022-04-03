@@ -73,7 +73,7 @@ const endTurn = () => {
     cancelPick()
     updateScore()
     countPiecesAndRank()
-    isGameOver()
+    if (isGameOver()) return
     gTurnCount++
     gPossibleMoves = []
     gPickedPos = null
