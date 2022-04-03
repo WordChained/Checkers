@@ -1,6 +1,6 @@
 'use strict';
 let gBoard;
-let gWinner = "white";
+let gWinner = "White";
 let isDraw = false;
 let isWhitesTurn = true;
 let gTurnCount = 1;

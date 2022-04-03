@@ -70,19 +70,19 @@ const isEnemyPieceInRoute = (rowDiff, colDiff) => {
     return false
 }
 const endTurn = () => {
-    gTurnCount++
     cancelPick()
+    updateScore()
+    countPiecesAndRank()
+    isGameOver()
+    gTurnCount++
     gPossibleMoves = []
-    //to pass the turn...
     gPickedPos = null
     isWhitesTurn = !isWhitesTurn
     isRecursiveEating = false
     isCurrentlyEating = false
-    isGameOver()
     markTurn()
-    updateScore()
     isLegalMoveLeft()
-    countPiecesAndRank()
+
 }
 const move = (destinationRow, destinationCol, row, col) => {
     if (isCurrentlyEating) return
