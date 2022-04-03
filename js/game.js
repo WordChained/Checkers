@@ -401,7 +401,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             for (let i = 1; i < (8 - row) && i < (8 - col); i++) {
                 if (!(row + i + 1 < 8 && col + i + 1 < 8 && !gBoard[row + i][col + i].isMarked)) break
                 // if unoccupied add to tempArray
-                if (gIsDownRight && !isCorrectDirection(row, col, row + i, col + i)) break
+                if (!gIsDownRight && !isCorrectDirection(row, col, row + i, col + i)) break
                 if (!gBoard[row + i][col + i].isOccupied) temp.push({ row: row + i, col: col + i })
                 else if (gBoard[row + i][col + i].isOccupied && gBoard[row + i][col + i].isWhitePiece === isWhitesTurn) break
                 else if (gBoard[row + i][col + i].isOccupied && gBoard[row + i + 1][col + i + 1].isOccupied) break
@@ -431,7 +431,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             for (let i = 1; i < (8 - row) && i < col + 1; i++) {
                 if (!(row + i + 1 < 8 && col - i - 1 >= 0 && !gBoard[row + i][col - i].isMarked)) break
                 // if unoccupied add to tempArray
-                if (gIsDownLeft && !isCorrectDirection(row, col, row + i, col - i)) break
+                if (!gIsDownLeft && !isCorrectDirection(row, col, row + i, col - i)) break
                 if (!gBoard[row + i][col - i].isOccupied) temp.push({ row: row + i, col: col - i })
                 else if (gBoard[row + i][col - i].isOccupied && gBoard[row + i][col - i].isWhitePiece === isWhitesTurn) break
                 else if (gBoard[row + i][col - i].isOccupied && gBoard[row + i + 1][col - i - 1].isOccupied) break
@@ -459,7 +459,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             for (let i = 1; i < row + 1 && i < col + 1; i++) {
                 if (!(row - i - 1 >= 0 && col - i - 1 >= 0 && !gBoard[row - i][col - i].isMarked)) break
                 // if unoccupied add to tempArray
-                if (gIsUpLeft && !isCorrectDirection(row, col, row - i, col - i)) break
+                if (!gIsUpLeft && !isCorrectDirection(row, col, row - i, col - i)) break
                 if (!gBoard[row - i][col - i].isOccupied) temp.push({ row: row - i, col: col - i })
                 else if (gBoard[row - i][col - i].isOccupied && gBoard[row - i][col - i].isWhitePiece === isWhitesTurn) break
                 else if (gBoard[row - i][col - i].isOccupied && gBoard[row - i - 1][col - i - 1].isOccupied) break
@@ -488,7 +488,7 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
             for (let i = 1; i < row + 1 && i < (8 - col); i++) {
                 if (!(row - i - 1 >= 0 && col + i + 1 < 8 && !gBoard[row - i][col + i].isMarked)) break
                 // if unoccupied add to tempArray
-                if (gIsUpRight && !isCorrectDirection(row, col, row - i, col + i)) break
+                if (!gIsUpRight && !isCorrectDirection(row, col, row - i, col + i)) break
                 if (!gBoard[row - i][col + i].isOccupied) temp.push({ row: row - i, col: col + i })
                 else if (gBoard[row - i][col + i].isOccupied && gBoard[row - i][col + i].isWhitePiece === isWhitesTurn) break
                 else if (gBoard[row - i][col + i].isOccupied && gBoard[row - i - 1][col + i + 1].isOccupied) break
@@ -667,12 +667,12 @@ const checkAndMarkPossibleMoves = (row, col, isWhite, rank, isUnmarked = false) 
     }
     renderBoard(gBoard)
     gPossibleMoves = [...new Set(gPossibleMoves)]
-    if (gIsRecursiveEating) {
-        gPossibleMoves.forEach(move => {
-            // if (gBoard[row][col].rank === "king") isUnmarked = true
-            checkAndMarkPossibleMoves(move.row, move.col, isWhite, rank, isUnmarked)
-        })
-    }
+    // if (gIsRecursiveEating) {
+    //     gPossibleMoves.forEach(move => {
+    //         // if (gBoard[row][col].rank === "king") isUnmarked = true
+    //         checkAndMarkPossibleMoves(move.row, move.col, isWhite, rank, isUnmarked)
+    //     })
+    // }
 }
 const unMarkAll = () => {
     gBoard.forEach(row => {
