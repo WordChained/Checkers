@@ -14,7 +14,7 @@
   object-fit: contain;
   flex: 1;
 }
-@media(max-height: 700px){
+@media((max-height: 700px) and (max-height: 700px)){
   .scoreboard-container {
     height: 110px;
     flex-direction: row;
