@@ -16,11 +16,13 @@
 }
 @media(max-height: 700px){
   .scoreboard-container {
-    height: 140px;
-    
+    height: 110px;
+    flex-direction: row;
   }
   .scoreboard-container .title {
-    width: 250px;
+    width: 150px;
+    height: 35px;
+    object-fit: contain;
   }
 }
 
