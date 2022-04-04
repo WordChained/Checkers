@@ -35,7 +35,11 @@ main {
   position: relative;
   margin-bottom: 5px;
 }
-
+@media(max-height: 700px){
+  .button-container {
+    height: 60px;
+  }
+}
 .button-container button {
   display: flex;
   height: 50%;

@@ -8,13 +8,22 @@
   justify-content: center;
   padding: 20px;
 }
-
 .scoreboard-container .title {
   filter: drop-shadow(16px 16px 20px red) invert(75%);
   width: 340px;
   object-fit: contain;
   flex: 1;
 }
+@media(max-height: 700px){
+  .scoreboard-container {
+    height: 140px;
+    
+  }
+  .scoreboard-container .title {
+    width: 250px;
+  }
+}
+
 .content {
   display: flex;
   align-items: center;
